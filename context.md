@@ -4,7 +4,7 @@
 **Type**: Mobile-first, modular business management system  
 **Target Users**: South African SMEs and freelancers  
 **Design Priorities**: Offline-first, modular, low-data usage, mobile-first  
-**Tech Stack**: React Native (Expo), Supabase (backend/storage), Clerk (auth), EAS (CI/CD), Github (version control), Tailwind CSS (UI), OpenAI API (AI assistant)
+**Tech Stack**: React Native (Expo), Supabase (backend/storage/auth), EAS (CI/CD), Github (version control), Tailwind CSS (UI), OpenAI API (AI assistant)
 
 ---
 
