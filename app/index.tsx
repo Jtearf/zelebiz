@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Text, View, ActivityIndicator } from "react-native";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect } from "expo-router";
 import { useAuth } from "../lib/hooks/useAuth";
 
-// Decide where to redirect based on authentication status
+// Index page that redirects based on auth state
 export default function Index() {
-  const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
 
   // Show loading spinner until auth state is determined
@@ -18,12 +17,10 @@ export default function Index() {
     );
   }
 
-  // Once auth is loaded, redirect based on authentication status
-  if (isSignedIn) {
-    // If signed in, go to the main app tabs
-    return <Redirect href="/(tabs)" />;
-  } else {
-    // If not signed in, go to sign in page
-    return <Redirect href="/(auth)/sign-in" as any />;
-  }
+  // Simple conditional redirect
+  return isSignedIn ? (
+    <Redirect href="/(tabs)" />
+  ) : (
+    <Redirect href="/(auth)/sign-in" />
+  );
 }

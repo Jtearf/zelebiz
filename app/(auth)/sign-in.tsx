@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useAuth } from '../../lib/hooks/useAuth';
 import { Button } from '../../lib/components/ui/Button';
 import { Input } from '../../lib/components/ui/Input';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen() {
   const router = useRouter();
@@ -51,10 +52,7 @@ export default function SignInScreen() {
           
           <View style={styles.imageContainer}>
             <View style={styles.iconCircle}>
-              <Image 
-                source={require('../../assets/images/lock-icon.png')}
-                style={styles.lockIcon}
-              />
+              <Ionicons name="lock-closed" size={24} color="#4F46E5" />
             </View>
             <View style={[styles.dot, styles.purpleDot]} />
             <View style={[styles.dot, styles.redDot]} />
@@ -99,10 +97,7 @@ export default function SignInScreen() {
           </View>
           
           <View style={styles.fingerprint}>
-            <Image 
-              source={require('../../assets/images/fingerprint.png')}
-              style={styles.fingerprintIcon}
-            />
+            <Ionicons name="finger-print" size={48} color="#4F46E5" />
           </View>
           
           <View style={styles.footer}>

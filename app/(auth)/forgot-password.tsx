@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { useRouter, Link } from 'expo-router';
 import { supabase } from '../../lib/config/supabase';
 import { Button } from '../../lib/components/ui/Button';
 import { Input } from '../../lib/components/ui/Input';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
-  const handleSendCode = async () => {
-    if (!phoneNumber) {
-      setError('Please enter your phone number');
+  const handleSendResetLink = async () => {
+    if (!email) {
+      setError('Please enter your email address');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address');
       return;
     }
 
@@ -21,24 +27,19 @@ export default function ForgotPasswordScreen() {
     setError('');
 
     try {
-      // For now using email-based password reset via Supabase
-      // In a real app with phone authentication, you'd use a different flow
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        `${phoneNumber}@example.com`, // Replace with actual email
-        {
-          redirectTo: 'exp://localhost:8081/reset-password',
-        }
-      );
+      // Use Supabase's built-in password reset functionality
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        // This URL should be configured in Supabase's dashboard as an allowed redirect URL
+        // It will redirect users after they click the reset link in their email
+        redirectTo: 'zelebizapp://reset-password',
+      });
 
       if (error) throw error;
       
-      // Navigate to verification code screen
-      router.push({
-        pathname: '/(auth)/verification-code',
-        params: { phoneNumber }
-      });
+      // Show success message
+      setResetSent(true);
     } catch (err: any) {
-      setError(err.message || 'Failed to send reset code');
+      setError(err.message || 'Failed to send password reset link');
     } finally {
       setIsLoading(false);
     }
@@ -56,77 +57,56 @@ export default function ForgotPasswordScreen() {
           </View>
           
           <View style={styles.formContainer}>
-            <Text style={styles.instruction}>Type your phone number</Text>
-            
-            {error ? (
-              <Text style={styles.errorText}>{error}</Text>
-            ) : null}
-            
-            <Input
-              placeholder="(+84)"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              keyboardType="phone-pad"
-            />
-            
-            <Text style={styles.noteText}>
-              We texted you a code to verify your phone number
-            </Text>
-            
-            <Button
-              title="Send"
-              onPress={handleSendCode}
-              isLoading={isLoading}
-              style={styles.sendButton}
-            />
-          </View>
-          
-          {/* Number pad UI */}
-          <View style={styles.numberPad}>
-            <View style={styles.numberRow}>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '1')}>
-                <Text style={styles.numberText}>1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '2')}>
-                <Text style={styles.numberText}>2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '3')}>
-                <Text style={styles.numberText}>3</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.numberRow}>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '4')}>
-                <Text style={styles.numberText}>4</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '5')}>
-                <Text style={styles.numberText}>5</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '6')}>
-                <Text style={styles.numberText}>6</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.numberRow}>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '7')}>
-                <Text style={styles.numberText}>7</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '8')}>
-                <Text style={styles.numberText}>8</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '9')}>
-                <Text style={styles.numberText}>9</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.numberRow}>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '.')}>
-                <Text style={styles.numberText}>.</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber + '0')}>
-                <Text style={styles.numberText}>0</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.numberKey} onPress={() => setPhoneNumber(phoneNumber.slice(0, -1))}>
-                <Text style={styles.numberText}>⌫</Text>
-              </TouchableOpacity>
-            </View>
+            {resetSent ? (
+              <View style={styles.successContainer}>
+                <Text style={styles.successTitle}>Check your email</Text>
+                <Text style={styles.successText}>
+                  We've sent a password reset link to <Text style={styles.emailHighlight}>{email}</Text>
+                </Text>
+                <Text style={styles.instructionSecondary}>
+                  Click the link in the email to reset your password.
+                </Text>
+                <Button
+                  title="Return to login"
+                  onPress={() => router.push('/(auth)/sign-in' as any)}
+                  style={styles.returnButton}
+                />
+              </View>
+            ) : (
+              <>
+                <Text style={styles.instruction}>Enter your email address</Text>
+                
+                {error ? (
+                  <Text style={styles.errorText}>{error}</Text>
+                ) : null}
+                
+                <Input
+                  placeholder="you@example.com"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                
+                <Text style={styles.noteText}>
+                  We'll send you an email with a link to reset your password
+                </Text>
+                
+                <Button
+                  title="Send reset link"
+                  onPress={handleSendResetLink}
+                  isLoading={isLoading}
+                  style={styles.sendButton}
+                />
+                
+                <TouchableOpacity 
+                  style={styles.cancelButton}
+                  onPress={() => router.back()}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -162,6 +142,11 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginBottom: 20,
   },
+  instructionSecondary: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 30,
+  },
   errorText: {
     color: '#EF4444',
     marginBottom: 10,
@@ -170,32 +155,42 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     fontSize: 14,
     marginTop: 15,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   sendButton: {
     marginVertical: 15,
   },
-  numberPad: {
-    marginTop: 30,
-    paddingBottom: 30,
+  returnButton: {
+    marginTop: 20,
   },
-  numberRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  numberKey: {
-    flex: 1,
-    height: 60,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
+  cancelButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 5,
+    paddingVertical: 10,
   },
-  numberText: {
-    fontSize: 24,
+  cancelButtonText: {
+    fontSize: 14,
+    color: '#4F46E5',
     fontWeight: '500',
-    color: '#111827',
   },
+  successContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  successTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#10B981',
+    marginBottom: 15,
+  },
+  successText: {
+    fontSize: 16,
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  emailHighlight: {
+    fontWeight: '600',
+    color: '#4F46E5',
+  }
 });

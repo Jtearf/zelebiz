@@ -8,24 +8,58 @@ export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Listen for auth changes
+  // Listen for auth changes with better error handling and persistence
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoaded(true);
-    });
+    let isMounted = true;
+    console.log('[Auth] Initializing auth hook...');
+    
+    // Function to get and set the session
+    const loadSession = async () => {
+      try {
+        console.log('[Auth] Loading session from Supabase...');
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('[Auth] Error loading session:', error.message);
+          if (isMounted) setIsLoaded(true);
+          return;
+        }
+        
+        if (data?.session) {
+          console.log('[Auth] Session loaded successfully, user is signed in');
+          if (isMounted) {
+            setSession(data.session);
+            setUser(data.session.user);
+          }
+        } else {
+          console.log('[Auth] No active session found');
+        }
+        
+        if (isMounted) setIsLoaded(true);
+      } catch (err) {
+        console.error('[Auth] Unexpected error loading session:', err);
+        if (isMounted) setIsLoaded(true);
+      }
+    };
+    
+    // Load the session immediately
+    loadSession();
 
     // Set up a listener for future auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      (event, session) => {
+        console.log(`[Auth] Auth state changed: ${event}`);
+        if (isMounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+        }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Sign in with email and password

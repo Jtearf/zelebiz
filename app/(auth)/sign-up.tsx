@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useAuth } from '../../lib/hooks/useAuth';
 import { Button } from '../../lib/components/ui/Button';
 import { Input } from '../../lib/components/ui/Input';
 import { Checkbox } from 'expo-checkbox';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -60,11 +61,7 @@ export default function SignUpScreen() {
           
           <View style={styles.imageContainer}>
             <View style={styles.iconCircle}>
-              <Image 
-                source={require('../../assets/images/profile-icon.png')}
-                style={styles.profileIcon}
-                defaultSource={require('../../assets/images/profile-icon.png')}
-              />
+              <Ionicons name="person" size={40} color="#4F46E5" />
             </View>
             <View style={[styles.dot, styles.purpleDot]} />
             <View style={[styles.dot, styles.redDot]} />

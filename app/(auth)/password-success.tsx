@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from '../../lib/components/ui/Button';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function PasswordSuccessScreen() {
   const router = useRouter();
@@ -14,11 +15,9 @@ export default function PasswordSuccessScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Image 
-          source={require('../../assets/images/success-illustration.png')}
-          style={styles.image}
-          defaultSource={require('../../assets/images/success-illustration.png')}
-        />
+        <View style={styles.iconContainer}>
+          <Ionicons name="checkmark-circle" size={120} color="#4F46E5" />
+        </View>
         
         <Text style={styles.title}>Change password successfully!</Text>
         
@@ -46,6 +45,11 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
   },
   image: {
     width: 240,
