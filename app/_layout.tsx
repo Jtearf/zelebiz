@@ -18,7 +18,34 @@ function RootLayout() {
             backgroundColor: '#F9FAFB',
           },
         }}
-      />
+      >
+        {/* Index screen - handles auth redirect */}
+        <Stack.Screen 
+          name="index" 
+          options={{
+            headerShown: false,
+            animation: "fade"
+          }} 
+        />
+        
+        {/* Auth group - hide tab bar and header */}
+        <Stack.Screen 
+          name="auth" 
+          options={{
+            headerShown: false,
+            presentation: "modal"
+          }} 
+        />
+        
+        {/* Tabs group - hide header since tabs has its own headers */}
+        <Stack.Screen 
+          name="(tabs)" 
+          options={{
+            headerShown: false,
+            animation: "fade"
+          }} 
+        />
+      </Stack>
     </AppProviders>
   );
 }

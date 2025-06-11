@@ -1,6 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -56,10 +56,10 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Ionicons
               name="add-circle"
-              size={48}
+              size={30}
               color="#0F766E"
               style={{ 
-                marginBottom: 4,
+                marginBottom: 2,
               }}
             />
           ),

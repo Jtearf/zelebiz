@@ -21,6 +21,6 @@ export default function Index() {
   return isSignedIn ? (
     <Redirect href="/(tabs)" />
   ) : (
-    <Redirect href="/(auth)/sign-in" />
+    <Redirect href="/auth/sign-in" />
   );
 }

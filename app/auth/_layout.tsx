@@ -9,13 +9,14 @@ export default function AuthLayout() {
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
-          headerShown: true,
+          headerShown: false,
           headerStyle: {
             backgroundColor: '#FFFFFF',
           },
           headerTintColor: '#111827',
           headerShadowVisible: false,
-          // headerBackTitleVisible is not supported in the current type
+          // Hide the group name from appearing in the header
+          headerTitle: "",
           // Using headerBackTitle instead which is the correct property
           headerBackTitle: '',
           contentStyle: {
