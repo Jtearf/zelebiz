@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Create Screen Component
@@ -20,11 +20,6 @@ export default function CreateScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Create New</Text>
-        <Text style={styles.subtitle}>What would you like to create today?</Text>
-      </View>
-
       <View style={styles.optionsContainer}>
         {createOptions.map((option) => (
           <TouchableOpacity key={option.id} style={styles.optionCard}>

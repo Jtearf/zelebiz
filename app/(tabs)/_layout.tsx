@@ -31,6 +31,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={24} color={color} />
           ),
@@ -42,6 +43,7 @@ export default function TabLayout() {
         name="business"
         options={{
           title: "Business",
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Ionicons name="business" size={24} color={color} />
           ),
@@ -53,6 +55,7 @@ export default function TabLayout() {
         name="create"
         options={{
           title: "",
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Ionicons
               name="add-circle"
@@ -71,6 +74,7 @@ export default function TabLayout() {
         name="reports"
         options={{
           title: "Reports",
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Ionicons name="bar-chart" size={24} color={color} />
           ),
@@ -82,6 +86,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Ionicons name="person" size={24} color={color} />
           ),

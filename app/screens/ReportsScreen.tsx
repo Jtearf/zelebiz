@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 /**
  * Reports Screen Component
@@ -8,11 +8,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
  */
 export default function ReportsScreen() {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Reports & Analytics</Text>
-      </View>
-      
+    <ScrollView style={styles.container}>  
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Overview</Text>
         <View style={styles.card}>

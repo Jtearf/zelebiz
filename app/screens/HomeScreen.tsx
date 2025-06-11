@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Home Screen Component
@@ -24,7 +24,7 @@ export default function HomeScreen() {
         <View style={[styles.summaryCard, styles.primaryCard]}>
           <View style={styles.cardContent}>
             <Text style={styles.cardLabel}>Today's Revenue</Text>
-            <Text style={styles.cardValue}>R 0.00</Text>
+            <Text style={styles.cardValue}>R 2021.79</Text>
             <Text style={styles.cardChange}>+0% from yesterday</Text>
           </View>
           <View style={styles.cardIcon}>

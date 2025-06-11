@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
  * Business Screen Component
@@ -10,10 +10,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default function BusinessScreen() {
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>My Business</Text>
-      </View>
-      
       <View style={styles.businessCard}>
         <View style={styles.businessInfo}>
           <View style={styles.businessLogo}>
