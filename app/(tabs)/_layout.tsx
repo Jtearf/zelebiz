@@ -31,7 +31,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          headerShown: false,
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={24} color={color} />
           ),

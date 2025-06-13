@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, TextInput, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import Constants from 'expo-constants';
+import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/config/supabase';
 import { Button } from '../../lib/components/ui/Button';
 
 export default function VerificationCodeScreen() {
   const router = useRouter();
+  const statusBarHeight = Constants.statusBarHeight;
   const { phoneNumber } = useLocalSearchParams();
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,9 +52,9 @@ export default function VerificationCodeScreen() {
       
       // Navigate to change password screen
       router.push({
-        pathname: '/(auth)/change-password',
+        pathname: '/auth/change-password',
         params: { phoneNumber }
-      } as any);
+      });
     } catch (err: any) {
       setError(err.message || 'Failed to verify code');
     } finally {
@@ -81,12 +84,22 @@ export default function VerificationCodeScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.contentContainer}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+      <View style={{ height: Platform.OS === 'ios' ? 0 : statusBarHeight }} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.contentContainer}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#4F46E5" />
+            <Text style={styles.backButtonText}>Verification Code</Text>
+          </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.title}>Forgot password</Text>
           </View>
@@ -186,9 +199,10 @@ export default function VerificationCodeScreen() {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -196,6 +210,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4F46E5',
   },
   scrollView: {
     flex: 1,

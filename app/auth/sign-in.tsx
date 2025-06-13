@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, StatusBar } from 'react-native';
 import { Link, useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 import { useAuth } from '../../lib/hooks/useAuth';
 import { Button } from '../../lib/components/ui/Button';
 import { Input } from '../../lib/components/ui/Input';
@@ -8,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen() {
   const router = useRouter();
+  const statusBarHeight = Constants.statusBarHeight;
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,12 +41,22 @@ export default function SignInScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+      <View style={{ height: Platform.OS === 'ios' ? 0 : statusBarHeight }} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
       <ScrollView style={styles.scrollView}>
         <View style={styles.contentContainer}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#4F46E5" />
+            <Text style={styles.backButtonText}>Sign In</Text>
+          </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.title}>Welcome Back</Text>
             <Text style={styles.subtitle}>Hello there, sign in to continue</Text>
@@ -83,7 +95,7 @@ export default function SignInScreen() {
             
             <TouchableOpacity 
               style={styles.forgotPassword}
-              onPress={() => router.push('/(auth)/forgot-password' as any)}
+              onPress={() => router.push('/auth/forgot-password')}
             >
               <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
             </TouchableOpacity>
@@ -102,7 +114,7 @@ export default function SignInScreen() {
           
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account?</Text>
-            <Link href={'/(auth)/sign-up' as any} asChild>
+            <Link href={'/auth/sign-up'} asChild>
               <TouchableOpacity>
                 <Text style={styles.signUpLink}>Sign Up</Text>
               </TouchableOpacity>
@@ -110,7 +122,8 @@ export default function SignInScreen() {
           </View>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -118,6 +131,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4F46E5',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import { Link, useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 import { useAuth } from '../../lib/hooks/useAuth';
 import { Button } from '../../lib/components/ui/Button';
 import { Input } from '../../lib/components/ui/Input';
@@ -9,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUpScreen() {
   const router = useRouter();
+  const statusBarHeight = Constants.statusBarHeight;
   const { register } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,12 +50,22 @@ export default function SignUpScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.contentContainer}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+      <View style={{ height: Platform.OS === 'ios' ? 0 : statusBarHeight }} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.contentContainer}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#4F46E5" />
+            <Text style={styles.backButtonText}>Sign Up</Text>
+          </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.title}>Welcome to us,</Text>
             <Text style={styles.subtitle}>Hello there, create New account</Text>
@@ -120,15 +132,16 @@ export default function SignUpScreen() {
           
           <View style={styles.footer}>
             <Text style={styles.footerText}>Have an account?</Text>
-            <Link href="/(auth)/sign-in" asChild>
+            <Link href="/auth/sign-in" asChild>
               <TouchableOpacity>
                 <Text style={styles.signInLink}>Sign In</Text>
               </TouchableOpacity>
             </Link>
           </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -136,6 +149,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4F46E5',
   },
   scrollView: {
     flex: 1,

@@ -1,19 +1,31 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 import { Button } from '../../lib/components/ui/Button';
 import { Ionicons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 export default function PasswordSuccessScreen() {
   const router = useRouter();
+  const statusBarHeight = Constants.statusBarHeight;
 
   const handleDone = () => {
     // Navigate to sign-in screen
-    router.replace('/(auth)/sign-in' as any);
+    router.replace('/auth/sign-in');
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+      <View style={{ height: Platform.OS === 'ios' ? 0 : statusBarHeight }} />
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => router.back()}
+      >
+        <Ionicons name="arrow-back" size={24} color="#4F46E5" />
+        <Text style={styles.backButtonText}>Password Success</Text>
+      </TouchableOpacity>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
           <Ionicons name="checkmark-circle" size={120} color="#4F46E5" />
@@ -41,7 +53,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
-    justifyContent: 'center',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  backButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4F46E5',
   },
   content: {
     alignItems: 'center',
